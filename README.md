@@ -1,6 +1,17 @@
 # Simple chat using Laravel Echo
 
 
+Pacotes composer
+```bash
+composer install
+```
+
+Pacotes NPM
+```bash
+npm install
+```
+
+
 povoando banco de dados 
 ```bash
 php artisan migrate --seed
