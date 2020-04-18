@@ -63,6 +63,10 @@
 </nav>
     @yield('content')
 
+    @yield('pre-script')
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}" defer></script>
+
     <script !src="">
         document.addEventListener('DOMContentLoaded', function() {
             var elems = document.querySelectorAll('.dropdown-trigger');

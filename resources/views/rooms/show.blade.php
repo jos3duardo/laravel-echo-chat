@@ -44,3 +44,8 @@
         </div>
     </div>
 @endsection
+@section('pre-script')
+    <script type="text/javascript">
+        let roomId = "{{ $room->id }}";
+    </script>
+@endsection
