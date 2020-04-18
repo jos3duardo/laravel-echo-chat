@@ -10,11 +10,12 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        $rooms = Room::all();
+
+        return view('rooms.index', compact('rooms'));
     }
 
     /**
