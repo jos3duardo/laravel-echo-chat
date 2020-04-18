@@ -27,11 +27,24 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.config.delimiter = ['[[',']]'];
+
+Pusher.logToConsole = true;
+
 const app = new Vue({
     el: '#app',
     data: {
         roomId: roomId,
-        content: ''
+        content: '',
+        users: []
+    },
+    ready(){
+      Echo.join(`room.${roomId}`)
+          .listen('SendMessage',(data) => {
+              console.log(data)
+          }).here( (users) => {
+            this.users = users;
+      } )
     },
     methods: {
         sendMessage(){
@@ -39,7 +52,7 @@ const app = new Vue({
                 'content': this.content
             })
             .then(function (response) {
-                console.log(response);
+                // console.log(response);
             })
             .catch(function (error) {
                 console.log(error);
@@ -48,4 +61,4 @@ const app = new Vue({
     }
 });
 
-// console.log(app)
+console.log(app)

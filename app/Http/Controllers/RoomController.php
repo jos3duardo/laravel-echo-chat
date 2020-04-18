@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SendMessage;
 use App\Models\Room;
 use App\Models\Message;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -79,6 +80,8 @@ class RoomController extends Controller
         $message->room_id = $room->id;
         $message->user_id = Auth::user()->id;
         $message->save();
+
+        broadcast(new SendMessage($message));
 
         return response()->json($message, 201);
     }

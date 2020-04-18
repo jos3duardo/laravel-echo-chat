@@ -3,14 +3,17 @@
 namespace App\Events;
 
 use App\Models\Message;
-use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
 
 class SendMessage implements ShouldBroadcast
 {
-    use SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
 
     /**
      * @var Message
@@ -20,7 +23,7 @@ class SendMessage implements ShouldBroadcast
 
     /**
      * SendMessage constructor.
-     * @param $message
+     * @param Message $message
      */
     public function __construct(Message $message)
     {
@@ -30,6 +33,6 @@ class SendMessage implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new Channel("room.{$this->message->romm_id}");
+        return new PresenceChannel("room.{$this->message->romm_id}");
     }
 }

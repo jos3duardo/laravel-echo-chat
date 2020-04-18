@@ -36,4 +36,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function canJoinRoom($roomId){
+        return $this->room_id == $roomId;
+    }
 }

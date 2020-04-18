@@ -7,8 +7,8 @@
                     <div class="card-header"><h4 class="title">Usuários</h4></div>
                     <div class="card-content">
                         <ul class="collection">
-                            <li class="collection-item">
-                                <a href="#"></a>
+                            <li class="collection-item" v-for="o in users">
+                                <a href="#"> [[ o.name ]]</a>
                             </li>
                         </ul>
                     </div>

@@ -59097,24 +59097,36 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.config.delimiter = ['[[', ']]'];
+Pusher.logToConsole = true;
 var app = new Vue({
   el: '#app',
   data: {
     roomId: roomId,
-    content: ''
+    content: '',
+    users: []
+  },
+  ready: function ready() {
+    var _this = this;
+
+    Echo.join("room.".concat(roomId)).listen('SendMessage', function (data) {
+      console.log(data);
+    }).here(function (users) {
+      _this.users = users;
+    });
   },
   methods: {
     sendMessage: function sendMessage() {
       window.axios.post("/chat/rooms/".concat(this.roomId, "/message"), {
         'content': this.content
-      }).then(function (response) {
-        console.log(response);
+      }).then(function (response) {// console.log(response);
       })["catch"](function (error) {
         console.log(error);
       });
     }
   }
-}); // console.log(app)
+});
+console.log(app);
 
 /***/ }),
 
@@ -59127,7 +59139,7 @@ var app = new Vue({
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
+/* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -59160,11 +59172,10 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: process.env.PUSHER_APP_KEY,
-  cluster: process.env.PUSHER_APP_CLUSTER,
-  encrypted: true
+  key: '03f5172211d2ecac60f7',
+  cluster: 'mt1',
+  forceTLS: true
 });
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 
