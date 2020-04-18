@@ -30,8 +30,22 @@ window.Vue = require('vue');
 const app = new Vue({
     el: '#app',
     data: {
-        roomId: roomId
+        roomId: roomId,
+        content: ''
+    },
+    methods: {
+        sendMessage(){
+            window.axios.post(`/chat/rooms/${this.roomId}/message`,{
+                'content': this.content
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        }
     }
 });
 
-console.log(app)
+// console.log(app)

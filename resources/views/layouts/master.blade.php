@@ -20,7 +20,8 @@
     <title>{{env('APP_NAME')}}</title>
 </head>
 <body>
-<nav>
+<div id="app">
+    <nav>
     <div class="nav-wrapper">
         <a  href="{{ url('/') }}" class="brand-logo">{{ config('app.name', 'Laravel') }}</a>
 
@@ -62,16 +63,20 @@
     </div>
 </nav>
     @yield('content')
+</div>
 
     @yield('pre-script')
+
+
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
-    <script !src="">
+    <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function() {
-            var elems = document.querySelectorAll('.dropdown-trigger');
-            var instances = M.Dropdown.init(elems);
+            let elems = document.querySelectorAll('.dropdown-trigger');
+            let instances = M.Dropdown.init(elems);
         });
     </script>
+
 </body>
 </html>

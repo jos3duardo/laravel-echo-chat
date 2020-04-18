@@ -29,11 +29,14 @@
                         <div class="row">
                             <div class="input-field col s12 m8 l8">
                                 <i class="material-icons prefix">mode_edit</i>
-                                <input id="icon_prefix" type="text" class="validate">
+                                <input id="icon_prefix" type="text" class="validate"
+                                       v-model="content" v-on:keyup.enter="sendMessage"/>
                                 <label for="icon_prefix">Digite uma mensagem</label>
                             </div>
                             <div class="input-field col s12 m4 l4">
-                                <button class="btn waves-effect waves-light" type="submit" name="action">Enviar
+                                <button class="btn waves-effect waves-light" type="submit" name="action"
+                                v-on:click="sendMessage" >
+                                    Enviar
                                     <i class="material-icons right">send</i>
                                 </button>
                             </div>
