@@ -9,7 +9,9 @@
                         @foreach($rooms as $room)
                             <ul class="collection">
                                 <li class="collection-item">
-                                    <a href="{{route('chat.rooms.show',['room' => $room->id])}}">{{ $room->name }}</a>
+                                    <a href="{{route('chat.rooms.show',['room' => $room->id])}}">
+                                        {{ $room->name }}
+                                    </a>
                                 </li>
                             </ul>
                         @endforeach

@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::group([ 'prefix' => 'chat', 'as' => 'chat.' ], function (){
+Route::group([ 'prefix' => 'chat', 'as' => 'chat.', 'middleware'=> 'auth' ], function (){
     Route::resource('rooms', 'RoomController');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

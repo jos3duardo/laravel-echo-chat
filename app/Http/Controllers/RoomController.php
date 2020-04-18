@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoomController extends Controller
 {
@@ -42,21 +44,28 @@ class RoomController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Roon  $roon
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Room  $room
      */
-    public function show(Roon $roon)
+    public function show(Room $room)
     {
-        //
+        //caso usuario tente acessar uma sala q não existe
+        if (!$room){
+            throw new ModelNotFoundException('Sala não existe');
+        }
+        $user = Auth::user();
+        $user->room_id = $room->id;
+        $user->save();
+
+        return view('rooms.show', compact('room'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Roon  $roon
+     * @param  \App\Models\Room  $room
      * @return \Illuminate\Http\Response
      */
-    public function edit(Roon $roon)
+    public function edit(Room $room)
     {
         //
     }
@@ -65,10 +74,10 @@ class RoomController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Roon  $roon
+     * @param  \App\Models\Room  $room
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Roon $roon)
+    public function update(Request $request, Room $room)
     {
         //
     }
@@ -76,10 +85,10 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Roon  $roon
+     * @param  \App\Models\Room  $room
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Roon $roon)
+    public function destroy(Room $room)
     {
         //
     }
