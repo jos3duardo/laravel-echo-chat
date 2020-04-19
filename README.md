@@ -2,10 +2,10 @@
 
 
 preview room  
-![room](/public/img/room.jpg)
+![room](public/img/room.jpg)
 
 preview chat  
-![chat](/public/img/chat.jpg)    
+![chat](public/img/chat.jpg)    
 
 
 ## About
