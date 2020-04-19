@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('rooms.index');
 });
 
 Route::group([ 'prefix' => 'chat', 'as' => 'chat.', 'middleware'=> 'auth' ], function (){
