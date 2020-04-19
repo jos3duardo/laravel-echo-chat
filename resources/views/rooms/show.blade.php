@@ -20,6 +20,20 @@
 
                     <div class="card-body">
                         <ul class="chat list-unstyled">
+                            @foreach($messages as $message)
+                                <li class="clearfix {{ $message->user->id == auth()->user()->id ? 'right' : 'left'}}">
+                                <span class="{{ $message->user->id == auth()->user()->id ? 'float-right' : 'float-left'}}">
+                                    <img src="http://www.gravatar.com/avatar/{{md5($message->user->email)}}.jpg" class="rounded-circle" style="height: 45px;"/>
+                                </span>
+                                    <div class="chat-body">
+                                        <strong>{{ $message->user->name }}</strong>
+                                        <p>{{ $message->content }}</p>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+
+                        <ul class="chat list-unstyled">
                             <li v-for="o in messages" class="clearfix"
                                 v-bind:class="{left: userId != o.user.id, right: userId == o.user.id}">
                                 <span v-bind:class="{'float-left': userId != o.user.id, 'float-right': userId == o.user.id}">

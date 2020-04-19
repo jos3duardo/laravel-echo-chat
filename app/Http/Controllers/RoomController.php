@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\SendMessage;
 use App\Models\Room;
 use App\Models\Message;
+use App\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,11 +49,15 @@ class RoomController extends Controller
             throw new ModelNotFoundException('Sala não existe');
         }
 
+        $messages = Message::where([
+            'room_id' => $room->id
+        ])->get();
+
         $user = Auth::user();
         $user->room_id = $room->id;
         $user->save();
 
-        return view('rooms.show', compact('room'));
+        return view('rooms.show', compact('room','messages'));
     }
 
     /**
@@ -82,20 +87,24 @@ class RoomController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Room  $room
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Room $room
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Room $room)
     {
-        //
+        $data = $request->only('name');
+        $room->fill($data);
+        $room->save();
+
+        return redirect()->to(route('chat.rooms.index'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Room $room
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
     public function destroy(Room $room)
@@ -106,8 +115,15 @@ class RoomController extends Controller
                 $message->delete();
             }
         }
+        $users = User::all();
+        if ($users){
+            foreach ($users as $user){
+                $user->room_id = null;
+                $user->save();
+            }
+        }
         $room->delete();
 
-        return view('rooms.show', compact('room'));
+        return redirect()->to(route('chat.rooms.index'));
     }
 }

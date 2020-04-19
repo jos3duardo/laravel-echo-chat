@@ -2,19 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SendMessage;
 use App\Models\Message;
+use App\Models\Room;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index($id)
     {
-        //
+
+        $messages = Message::find($id);
+
+        if (!$messages) {
+            throw new ModelNotFoundException("Sala não existente");
+        }
+
+        return response()->json($messages, 201);
     }
 
     /**

@@ -59,7 +59,7 @@ const app = new Vue({
             })
             .then(function (response) {
                 // console.log(app);
-                // $('#input-mesage').val('')
+
             })
             .catch(function (error) {
                 console.log(error);
@@ -68,6 +68,7 @@ const app = new Vue({
         createPhoto(email){
             return `http://www.gravatar.com/avatar/${md5(email)}.jpg`;
         }
+
     }
 });
 
