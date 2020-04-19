@@ -51,6 +51,10 @@ PUSHER_APP_CLUSTER='your cluster'
 
 Run database 
 ```bash
+php artisan migrate
+```
+or you can add data for testing using seeders with the command below. This command add 10 chat rooms and 11 users in your application 
+```bash
 php artisan migrate --seed
 ```
 
