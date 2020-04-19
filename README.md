@@ -1,7 +1,7 @@
 # Simple chat using Laravel Echo
 
 
-preview room  
+preview list rooms  
 ![room](public/img/room.jpg)
 
 preview chat  
