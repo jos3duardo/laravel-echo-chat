@@ -1,4 +1,4 @@
-# Simple chat using Laravel Echo
+# Simple chat using Laravel Echo and Pusher
 
 
 preview list rooms  
