@@ -1,45 +1,44 @@
-@extends('layouts.master')
+@extends('layouts.app')
+@section('pre-style')
+    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+@endsection
 @section('content')
+
     <div class="container">
         <div class="row">
-            <div class="col s12 m4 l4">
-                <div class="card-panel">
-                    <div class="card-header"><h4 class="title">Usuários</h4></div>
-                    <div class="card-content">
-                        <ul class="collection">
-                            <li class="collection-item" v-for="o in users">
-                                <a href="#"> [[ o.name ]]</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+            <div class="col-md-3">
+                <h4>Usuários</h4>
+                <ul class="list-group">
+                    <li class="list-group-item" v-for="o in users">
+                        <a href="#">[[ o.name ]]</a>
+                    </li>
+                </ul>
             </div>
-            <div class="col s12 m8 l8">
-                <div class="card-panel">
-                    <div class="card-header"><h4 class="title">{{ $room->name }}</h4></div>
-                    <div class="card-content">
-                        <ul class="collection">
-                            <li class="collection-item">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">{{$room->name}}</div>
 
-
+                    <div class="card-body">
+                        <ul class="chat list-unstyled">
+                            <li v-for="o in messages" class="clearfix"
+                                v-bind:class="{left: userId != o.user.id, right: userId == o.user.id}">
+                                <span v-bind:class="{'float-left': userId != o.user.id, 'float-right': userId == o.user.id}">
+                                    <img v-bind:src="createPhoto(o.user.email)" class="rounded-circle" style="height: 45px;"/>
+                                </span>
+                                <div class="chat-body">
+                                    <strong>[[ o.user.name ]]</strong>
+                                    <p>[[ o.message.content ]]</p>
+                                </div>
                             </li>
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="row">
-                            <div class="input-field col s12 m8 l8">
-                                <i class="material-icons prefix">mode_edit</i>
-                                <input id="icon_prefix" type="text" class="validate"
-                                       v-model="content" v-on:keyup.enter="sendMessage"/>
-                                <label for="icon_prefix">Digite uma mensagem</label>
-                            </div>
-                            <div class="input-field col s12 m4 l4">
-                                <button class="btn waves-effect waves-light" type="submit" name="action"
-                                v-on:click="sendMessage" >
-                                    Enviar
-                                    <i class="material-icons right">send</i>
-                                </button>
-                            </div>
+                        <div class="input-group">
+                            <input type="text" class="form-control input-md" id="input-mesage"
+                                   placeholder="Digite sua mensagem" v-model="content" v-on:keyup.enter="sendMessage"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-success btn-md" v-on:click="sendMessage">Enviar</button>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -47,8 +46,10 @@
         </div>
     </div>
 @endsection
+
 @section('pre-script')
     <script type="text/javascript">
         let roomId = "{{ $room->id }}";
+        let userId = "{{ Auth::user()->id }}";
     </script>
 @endsection

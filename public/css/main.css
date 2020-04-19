@@ -1,0 +1,18 @@
+.chat {
+    padding: 0;
+}
+.chat li {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+.chat li.left .chat-body {
+    margin-left: 60px;
+}
+.chat li.right .chat-body {
+    text-align: right;
+    margin-right: 60px;
+}
+.card-body {
+    overflow-y: scroll;
+    height: 400px;
+}

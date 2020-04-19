@@ -22,31 +22,24 @@ class RoomController extends Controller
         return view('rooms.index', compact('rooms'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
+     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->only('name');
+        Room::create($data);
+
+        return redirect()->to(route('chat.rooms.index'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Room  $room
+     * @param  Room  $room
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show(Room $room)
     {
@@ -69,12 +62,12 @@ class RoomController extends Controller
      * @param Room $room
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createMessage(Request $request, Room $room){
-        //caso usuario tente acessar uma sala q não existe
-        if (!$room){
-            throw new ModelNotFoundException('Sala não existe');
+    public function createMessage(Request $request, $id)
+    {
+        $room = Room::find($id);
+        if (!$room) {
+            throw new ModelNotFoundException("Sala não existente");
         }
-
         $message = new Message();
         $message->content = $request->get('content');
         $message->room_id = $room->id;
@@ -84,16 +77,6 @@ class RoomController extends Controller
         broadcast(new SendMessage($message));
 
         return response()->json($message, 201);
-    }
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Room  $room
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Room $room)
-    {
-        //
     }
 
     /**
@@ -111,11 +94,20 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Room  $room
-     * @return \Illuminate\Http\Response
+     * @param Room $room
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
      */
     public function destroy(Room $room)
     {
-        //
+        $messages = Message::all();
+        if ($messages){
+            foreach ($messages as $message){
+                $message->delete();
+            }
+        }
+        $room->delete();
+
+        return view('rooms.show', compact('room'));
     }
 }

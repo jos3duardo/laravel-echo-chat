@@ -27,38 +27,48 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.config.delimiter = ['[[',']]'];
-
 Pusher.logToConsole = true;
 
 const app = new Vue({
     el: '#app',
+    delimiters: ['[[',']]'],
     data: {
         roomId: roomId,
+        userId: userId,
         content: '',
-        users: []
+        users: [],
+        messages: []
     },
-    ready(){
+    mounted(){
       Echo.join(`room.${roomId}`)
           .listen('SendMessage',(data) => {
-              console.log(data)
+              this.messages.push(data)
           }).here( (users) => {
             this.users = users;
-      } )
+      }).joining((user) => {
+          this.users.push(user);
+          jQuery.notify(`<strong>${user.name}</strong> entrou no chat.`, {allow_dismiss: true});
+      }).leaving((user) => {
+          this.users.$remove(user);
+      })
     },
     methods: {
         sendMessage(){
-            window.axios.post(`/chat/rooms/${this.roomId}/message`,{
+            axios.post(`/chat/rooms/${this.roomId}/message`,{
                 'content': this.content
             })
             .then(function (response) {
-                // console.log(response);
+                // console.log(app);
+                // $('#input-mesage').val('')
             })
             .catch(function (error) {
                 console.log(error);
             });
+        },
+        createPhoto(email){
+            return `http://www.gravatar.com/avatar/${md5(email)}.jpg`;
         }
     }
 });
 
-console.log(app)
+// console.log(this.users, roomId)

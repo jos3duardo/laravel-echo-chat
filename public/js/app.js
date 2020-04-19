@@ -2063,6 +2063,777 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
+/***/ "./node_modules/blueimp-md5/js/md5.js":
+/*!********************************************!*\
+  !*** ./node_modules/blueimp-md5/js/md5.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_RESULT__;/*
+ * JavaScript MD5
+ * https://github.com/blueimp/JavaScript-MD5
+ *
+ * Copyright 2011, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * https://opensource.org/licenses/MIT
+ *
+ * Based on
+ * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
+ * Digest Algorithm, as defined in RFC 1321.
+ * Version 2.2 Copyright (C) Paul Johnston 1999 - 2009
+ * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
+ * Distributed under the BSD License
+ * See http://pajhome.org.uk/crypt/md5 for more info.
+ */
+
+/* global define */
+
+/* eslint-disable strict */
+
+;(function ($) {
+  'use strict'
+
+  /**
+   * Add integers, wrapping at 2^32.
+   * This uses 16-bit operations internally to work around bugs in interpreters.
+   *
+   * @param {number} x First integer
+   * @param {number} y Second integer
+   * @returns {number} Sum
+   */
+  function safeAdd(x, y) {
+    var lsw = (x & 0xffff) + (y & 0xffff)
+    var msw = (x >> 16) + (y >> 16) + (lsw >> 16)
+    return (msw << 16) | (lsw & 0xffff)
+  }
+
+  /**
+   * Bitwise rotate a 32-bit number to the left.
+   *
+   * @param {number} num 32-bit number
+   * @param {number} cnt Rotation count
+   * @returns {number} Rotated number
+   */
+  function bitRotateLeft(num, cnt) {
+    return (num << cnt) | (num >>> (32 - cnt))
+  }
+
+  /**
+   * Basic operation the algorithm uses.
+   *
+   * @param {number} q q
+   * @param {number} a a
+   * @param {number} b b
+   * @param {number} x x
+   * @param {number} s s
+   * @param {number} t t
+   * @returns {number} Result
+   */
+  function md5cmn(q, a, b, x, s, t) {
+    return safeAdd(bitRotateLeft(safeAdd(safeAdd(a, q), safeAdd(x, t)), s), b)
+  }
+  /**
+   * Basic operation the algorithm uses.
+   *
+   * @param {number} a a
+   * @param {number} b b
+   * @param {number} c c
+   * @param {number} d d
+   * @param {number} x x
+   * @param {number} s s
+   * @param {number} t t
+   * @returns {number} Result
+   */
+  function md5ff(a, b, c, d, x, s, t) {
+    return md5cmn((b & c) | (~b & d), a, b, x, s, t)
+  }
+  /**
+   * Basic operation the algorithm uses.
+   *
+   * @param {number} a a
+   * @param {number} b b
+   * @param {number} c c
+   * @param {number} d d
+   * @param {number} x x
+   * @param {number} s s
+   * @param {number} t t
+   * @returns {number} Result
+   */
+  function md5gg(a, b, c, d, x, s, t) {
+    return md5cmn((b & d) | (c & ~d), a, b, x, s, t)
+  }
+  /**
+   * Basic operation the algorithm uses.
+   *
+   * @param {number} a a
+   * @param {number} b b
+   * @param {number} c c
+   * @param {number} d d
+   * @param {number} x x
+   * @param {number} s s
+   * @param {number} t t
+   * @returns {number} Result
+   */
+  function md5hh(a, b, c, d, x, s, t) {
+    return md5cmn(b ^ c ^ d, a, b, x, s, t)
+  }
+  /**
+   * Basic operation the algorithm uses.
+   *
+   * @param {number} a a
+   * @param {number} b b
+   * @param {number} c c
+   * @param {number} d d
+   * @param {number} x x
+   * @param {number} s s
+   * @param {number} t t
+   * @returns {number} Result
+   */
+  function md5ii(a, b, c, d, x, s, t) {
+    return md5cmn(c ^ (b | ~d), a, b, x, s, t)
+  }
+
+  /**
+   * Calculate the MD5 of an array of little-endian words, and a bit length.
+   *
+   * @param {Array} x Array of little-endian words
+   * @param {number} len Bit length
+   * @returns {Array<number>} MD5 Array
+   */
+  function binlMD5(x, len) {
+    /* append padding */
+    x[len >> 5] |= 0x80 << len % 32
+    x[(((len + 64) >>> 9) << 4) + 14] = len
+
+    var i
+    var olda
+    var oldb
+    var oldc
+    var oldd
+    var a = 1732584193
+    var b = -271733879
+    var c = -1732584194
+    var d = 271733878
+
+    for (i = 0; i < x.length; i += 16) {
+      olda = a
+      oldb = b
+      oldc = c
+      oldd = d
+
+      a = md5ff(a, b, c, d, x[i], 7, -680876936)
+      d = md5ff(d, a, b, c, x[i + 1], 12, -389564586)
+      c = md5ff(c, d, a, b, x[i + 2], 17, 606105819)
+      b = md5ff(b, c, d, a, x[i + 3], 22, -1044525330)
+      a = md5ff(a, b, c, d, x[i + 4], 7, -176418897)
+      d = md5ff(d, a, b, c, x[i + 5], 12, 1200080426)
+      c = md5ff(c, d, a, b, x[i + 6], 17, -1473231341)
+      b = md5ff(b, c, d, a, x[i + 7], 22, -45705983)
+      a = md5ff(a, b, c, d, x[i + 8], 7, 1770035416)
+      d = md5ff(d, a, b, c, x[i + 9], 12, -1958414417)
+      c = md5ff(c, d, a, b, x[i + 10], 17, -42063)
+      b = md5ff(b, c, d, a, x[i + 11], 22, -1990404162)
+      a = md5ff(a, b, c, d, x[i + 12], 7, 1804603682)
+      d = md5ff(d, a, b, c, x[i + 13], 12, -40341101)
+      c = md5ff(c, d, a, b, x[i + 14], 17, -1502002290)
+      b = md5ff(b, c, d, a, x[i + 15], 22, 1236535329)
+
+      a = md5gg(a, b, c, d, x[i + 1], 5, -165796510)
+      d = md5gg(d, a, b, c, x[i + 6], 9, -1069501632)
+      c = md5gg(c, d, a, b, x[i + 11], 14, 643717713)
+      b = md5gg(b, c, d, a, x[i], 20, -373897302)
+      a = md5gg(a, b, c, d, x[i + 5], 5, -701558691)
+      d = md5gg(d, a, b, c, x[i + 10], 9, 38016083)
+      c = md5gg(c, d, a, b, x[i + 15], 14, -660478335)
+      b = md5gg(b, c, d, a, x[i + 4], 20, -405537848)
+      a = md5gg(a, b, c, d, x[i + 9], 5, 568446438)
+      d = md5gg(d, a, b, c, x[i + 14], 9, -1019803690)
+      c = md5gg(c, d, a, b, x[i + 3], 14, -187363961)
+      b = md5gg(b, c, d, a, x[i + 8], 20, 1163531501)
+      a = md5gg(a, b, c, d, x[i + 13], 5, -1444681467)
+      d = md5gg(d, a, b, c, x[i + 2], 9, -51403784)
+      c = md5gg(c, d, a, b, x[i + 7], 14, 1735328473)
+      b = md5gg(b, c, d, a, x[i + 12], 20, -1926607734)
+
+      a = md5hh(a, b, c, d, x[i + 5], 4, -378558)
+      d = md5hh(d, a, b, c, x[i + 8], 11, -2022574463)
+      c = md5hh(c, d, a, b, x[i + 11], 16, 1839030562)
+      b = md5hh(b, c, d, a, x[i + 14], 23, -35309556)
+      a = md5hh(a, b, c, d, x[i + 1], 4, -1530992060)
+      d = md5hh(d, a, b, c, x[i + 4], 11, 1272893353)
+      c = md5hh(c, d, a, b, x[i + 7], 16, -155497632)
+      b = md5hh(b, c, d, a, x[i + 10], 23, -1094730640)
+      a = md5hh(a, b, c, d, x[i + 13], 4, 681279174)
+      d = md5hh(d, a, b, c, x[i], 11, -358537222)
+      c = md5hh(c, d, a, b, x[i + 3], 16, -722521979)
+      b = md5hh(b, c, d, a, x[i + 6], 23, 76029189)
+      a = md5hh(a, b, c, d, x[i + 9], 4, -640364487)
+      d = md5hh(d, a, b, c, x[i + 12], 11, -421815835)
+      c = md5hh(c, d, a, b, x[i + 15], 16, 530742520)
+      b = md5hh(b, c, d, a, x[i + 2], 23, -995338651)
+
+      a = md5ii(a, b, c, d, x[i], 6, -198630844)
+      d = md5ii(d, a, b, c, x[i + 7], 10, 1126891415)
+      c = md5ii(c, d, a, b, x[i + 14], 15, -1416354905)
+      b = md5ii(b, c, d, a, x[i + 5], 21, -57434055)
+      a = md5ii(a, b, c, d, x[i + 12], 6, 1700485571)
+      d = md5ii(d, a, b, c, x[i + 3], 10, -1894986606)
+      c = md5ii(c, d, a, b, x[i + 10], 15, -1051523)
+      b = md5ii(b, c, d, a, x[i + 1], 21, -2054922799)
+      a = md5ii(a, b, c, d, x[i + 8], 6, 1873313359)
+      d = md5ii(d, a, b, c, x[i + 15], 10, -30611744)
+      c = md5ii(c, d, a, b, x[i + 6], 15, -1560198380)
+      b = md5ii(b, c, d, a, x[i + 13], 21, 1309151649)
+      a = md5ii(a, b, c, d, x[i + 4], 6, -145523070)
+      d = md5ii(d, a, b, c, x[i + 11], 10, -1120210379)
+      c = md5ii(c, d, a, b, x[i + 2], 15, 718787259)
+      b = md5ii(b, c, d, a, x[i + 9], 21, -343485551)
+
+      a = safeAdd(a, olda)
+      b = safeAdd(b, oldb)
+      c = safeAdd(c, oldc)
+      d = safeAdd(d, oldd)
+    }
+    return [a, b, c, d]
+  }
+
+  /**
+   * Convert an array of little-endian words to a string
+   *
+   * @param {Array<number>} input MD5 Array
+   * @returns {string} MD5 string
+   */
+  function binl2rstr(input) {
+    var i
+    var output = ''
+    var length32 = input.length * 32
+    for (i = 0; i < length32; i += 8) {
+      output += String.fromCharCode((input[i >> 5] >>> i % 32) & 0xff)
+    }
+    return output
+  }
+
+  /**
+   * Convert a raw string to an array of little-endian words
+   * Characters >255 have their high-byte silently ignored.
+   *
+   * @param {string} input Raw input string
+   * @returns {Array<number>} Array of little-endian words
+   */
+  function rstr2binl(input) {
+    var i
+    var output = []
+    output[(input.length >> 2) - 1] = undefined
+    for (i = 0; i < output.length; i += 1) {
+      output[i] = 0
+    }
+    var length8 = input.length * 8
+    for (i = 0; i < length8; i += 8) {
+      output[i >> 5] |= (input.charCodeAt(i / 8) & 0xff) << i % 32
+    }
+    return output
+  }
+
+  /**
+   * Calculate the MD5 of a raw string
+   *
+   * @param {string} s Input string
+   * @returns {string} Raw MD5 string
+   */
+  function rstrMD5(s) {
+    return binl2rstr(binlMD5(rstr2binl(s), s.length * 8))
+  }
+
+  /**
+   * Calculates the HMAC-MD5 of a key and some data (raw strings)
+   *
+   * @param {string} key HMAC key
+   * @param {string} data Raw input string
+   * @returns {string} Raw MD5 string
+   */
+  function rstrHMACMD5(key, data) {
+    var i
+    var bkey = rstr2binl(key)
+    var ipad = []
+    var opad = []
+    var hash
+    ipad[15] = opad[15] = undefined
+    if (bkey.length > 16) {
+      bkey = binlMD5(bkey, key.length * 8)
+    }
+    for (i = 0; i < 16; i += 1) {
+      ipad[i] = bkey[i] ^ 0x36363636
+      opad[i] = bkey[i] ^ 0x5c5c5c5c
+    }
+    hash = binlMD5(ipad.concat(rstr2binl(data)), 512 + data.length * 8)
+    return binl2rstr(binlMD5(opad.concat(hash), 512 + 128))
+  }
+
+  /**
+   * Convert a raw string to a hex string
+   *
+   * @param {string} input Raw input string
+   * @returns {string} Hex encoded string
+   */
+  function rstr2hex(input) {
+    var hexTab = '0123456789abcdef'
+    var output = ''
+    var x
+    var i
+    for (i = 0; i < input.length; i += 1) {
+      x = input.charCodeAt(i)
+      output += hexTab.charAt((x >>> 4) & 0x0f) + hexTab.charAt(x & 0x0f)
+    }
+    return output
+  }
+
+  /**
+   * Encode a string as UTF-8
+   *
+   * @param {string} input Input string
+   * @returns {string} UTF8 string
+   */
+  function str2rstrUTF8(input) {
+    return unescape(encodeURIComponent(input))
+  }
+
+  /**
+   * Encodes input string as raw MD5 string
+   *
+   * @param {string} s Input string
+   * @returns {string} Raw MD5 string
+   */
+  function rawMD5(s) {
+    return rstrMD5(str2rstrUTF8(s))
+  }
+  /**
+   * Encodes input string as Hex encoded string
+   *
+   * @param {string} s Input string
+   * @returns {string} Hex encoded string
+   */
+  function hexMD5(s) {
+    return rstr2hex(rawMD5(s))
+  }
+  /**
+   * Calculates the raw HMAC-MD5 for the given key and data
+   *
+   * @param {string} k HMAC key
+   * @param {string} d Input string
+   * @returns {string} Raw MD5 string
+   */
+  function rawHMACMD5(k, d) {
+    return rstrHMACMD5(str2rstrUTF8(k), str2rstrUTF8(d))
+  }
+  /**
+   * Calculates the Hex encoded HMAC-MD5 for the given key and data
+   *
+   * @param {string} k HMAC key
+   * @param {string} d Input string
+   * @returns {string} Raw MD5 string
+   */
+  function hexHMACMD5(k, d) {
+    return rstr2hex(rawHMACMD5(k, d))
+  }
+
+  /**
+   * Calculates MD5 value for a given string.
+   * If a key is provided, calculates the HMAC-MD5 value.
+   * Returns a Hex encoded string unless the raw argument is given.
+   *
+   * @param {string} string Input string
+   * @param {string} [key] HMAC key
+   * @param {boolean} [raw] Raw output switch
+   * @returns {string} MD5 output
+   */
+  function md5(string, key, raw) {
+    if (!key) {
+      if (!raw) {
+        return hexMD5(string)
+      }
+      return rawMD5(string)
+    }
+    if (!raw) {
+      return hexHMACMD5(key, string)
+    }
+    return rawHMACMD5(key, string)
+  }
+
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+      return md5
+    }).call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))
+  } else {}
+})(this)
+
+
+/***/ }),
+
+/***/ "./node_modules/bootstrap-notify/bootstrap-notify.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/bootstrap-notify/bootstrap-notify.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+* Project: Bootstrap Notify = v3.1.3
+* Description: Turns standard Bootstrap alerts into "Growl-like" notifications.
+* Author: Mouse0270 aka Robert McIntosh
+* License: MIT License
+* Website: https://github.com/mouse0270/bootstrap-growl
+*/
+(function (factory) {
+	if (true) {
+		// AMD. Register as an anonymous module.
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else {}
+}(function ($) {
+	// Create the defaults once
+	var defaults = {
+			element: 'body',
+			position: null,
+			type: "info",
+			allow_dismiss: true,
+			newest_on_top: false,
+			showProgressbar: false,
+			placement: {
+				from: "top",
+				align: "right"
+			},
+			offset: 20,
+			spacing: 10,
+			z_index: 1031,
+			delay: 5000,
+			timer: 1000,
+			url_target: '_blank',
+			mouse_over: null,
+			animate: {
+				enter: 'animated fadeInDown',
+				exit: 'animated fadeOutUp'
+			},
+			onShow: null,
+			onShown: null,
+			onClose: null,
+			onClosed: null,
+			icon_type: 'class',
+			template: '<div data-notify="container" class="col-xs-11 col-sm-4 alert alert-{0}" role="alert"><button type="button" aria-hidden="true" class="close" data-notify="dismiss">&times;</button><span data-notify="icon"></span> <span data-notify="title">{1}</span> <span data-notify="message">{2}</span><div class="progress" data-notify="progressbar"><div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div></div><a href="{3}" target="{4}" data-notify="url"></a></div>'
+		};
+
+	String.format = function() {
+		var str = arguments[0];
+		for (var i = 1; i < arguments.length; i++) {
+			str = str.replace(RegExp("\\{" + (i - 1) + "\\}", "gm"), arguments[i]);
+		}
+		return str;
+	};
+
+	function Notify ( element, content, options ) {
+		// Setup Content of Notify
+		var content = {
+			content: {
+				message: typeof content == 'object' ? content.message : content,
+				title: content.title ? content.title : '',
+				icon: content.icon ? content.icon : '',
+				url: content.url ? content.url : '#',
+				target: content.target ? content.target : '-'
+			}
+		};
+
+		options = $.extend(true, {}, content, options);
+		this.settings = $.extend(true, {}, defaults, options);
+		this._defaults = defaults;
+		if (this.settings.content.target == "-") {
+			this.settings.content.target = this.settings.url_target;
+		}
+		this.animations = {
+			start: 'webkitAnimationStart oanimationstart MSAnimationStart animationstart',
+			end: 'webkitAnimationEnd oanimationend MSAnimationEnd animationend'
+		}
+
+		if (typeof this.settings.offset == 'number') {
+		    this.settings.offset = {
+		    	x: this.settings.offset,
+		    	y: this.settings.offset
+		    };
+		}
+
+		this.init();
+	};
+
+	$.extend(Notify.prototype, {
+		init: function () {
+			var self = this;
+
+			this.buildNotify();
+			if (this.settings.content.icon) {
+				this.setIcon();
+			}
+			if (this.settings.content.url != "#") {
+				this.styleURL();
+			}
+			this.styleDismiss();
+			this.placement();
+			this.bind();
+
+			this.notify = {
+				$ele: this.$ele,
+				update: function(command, update) {
+					var commands = {};
+					if (typeof command == "string") {
+						commands[command] = update;
+					}else{
+						commands = command;
+					}
+					for (var command in commands) {
+						switch (command) {
+							case "type":
+								this.$ele.removeClass('alert-' + self.settings.type);
+								this.$ele.find('[data-notify="progressbar"] > .progress-bar').removeClass('progress-bar-' + self.settings.type);
+								self.settings.type = commands[command];
+								this.$ele.addClass('alert-' + commands[command]).find('[data-notify="progressbar"] > .progress-bar').addClass('progress-bar-' + commands[command]);
+								break;
+							case "icon":
+								var $icon = this.$ele.find('[data-notify="icon"]');
+								if (self.settings.icon_type.toLowerCase() == 'class') {
+									$icon.removeClass(self.settings.content.icon).addClass(commands[command]);
+								}else{
+									if (!$icon.is('img')) {
+										$icon.find('img');
+									}
+									$icon.attr('src', commands[command]);
+								}
+								break;
+							case "progress":
+								var newDelay = self.settings.delay - (self.settings.delay * (commands[command] / 100));
+								this.$ele.data('notify-delay', newDelay);
+								this.$ele.find('[data-notify="progressbar"] > div').attr('aria-valuenow', commands[command]).css('width', commands[command] + '%');
+								break;
+							case "url":
+								this.$ele.find('[data-notify="url"]').attr('href', commands[command]);
+								break;
+							case "target":
+								this.$ele.find('[data-notify="url"]').attr('target', commands[command]);
+								break;
+							default:
+								this.$ele.find('[data-notify="' + command +'"]').html(commands[command]);
+						};
+					}
+					var posX = this.$ele.outerHeight() + parseInt(self.settings.spacing) + parseInt(self.settings.offset.y);
+					self.reposition(posX);
+				},
+				close: function() {
+					self.close();
+				}
+			};
+		},
+		buildNotify: function () {
+			var content = this.settings.content;
+			this.$ele = $(String.format(this.settings.template, this.settings.type, content.title, content.message, content.url, content.target));
+			this.$ele.attr('data-notify-position', this.settings.placement.from + '-' + this.settings.placement.align);
+			if (!this.settings.allow_dismiss) {
+				this.$ele.find('[data-notify="dismiss"]').css('display', 'none');
+			}
+			if ((this.settings.delay <= 0 && !this.settings.showProgressbar) || !this.settings.showProgressbar) {
+				this.$ele.find('[data-notify="progressbar"]').remove();
+			}
+		},
+		setIcon: function() {
+			if (this.settings.icon_type.toLowerCase() == 'class') {
+				this.$ele.find('[data-notify="icon"]').addClass(this.settings.content.icon);
+			}else{
+				if (this.$ele.find('[data-notify="icon"]').is('img')) {
+					this.$ele.find('[data-notify="icon"]').attr('src', this.settings.content.icon);
+				}else{
+					this.$ele.find('[data-notify="icon"]').append('<img src="'+this.settings.content.icon+'" alt="Notify Icon" />');
+				}
+			}
+		},
+		styleDismiss: function() {
+			this.$ele.find('[data-notify="dismiss"]').css({
+				position: 'absolute',
+				right: '10px',
+				top: '5px',
+				zIndex: this.settings.z_index + 2
+			});
+		},
+		styleURL: function() {
+			this.$ele.find('[data-notify="url"]').css({
+				backgroundImage: 'url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)',
+				height: '100%',
+				left: '0px',
+				position: 'absolute',
+				top: '0px',
+				width: '100%',
+				zIndex: this.settings.z_index + 1
+			});
+		},
+		placement: function() {
+			var self = this,
+				offsetAmt = this.settings.offset.y,
+				css = {
+					display: 'inline-block',
+					margin: '0px auto',
+					position: this.settings.position ?  this.settings.position : (this.settings.element === 'body' ? 'fixed' : 'absolute'),
+					transition: 'all .5s ease-in-out',
+					zIndex: this.settings.z_index
+				},
+				hasAnimation = false,
+				settings = this.settings;
+
+			$('[data-notify-position="' + this.settings.placement.from + '-' + this.settings.placement.align + '"]:not([data-closing="true"])').each(function() {
+				return offsetAmt = Math.max(offsetAmt, parseInt($(this).css(settings.placement.from)) +  parseInt($(this).outerHeight()) +  parseInt(settings.spacing));
+			});
+			if (this.settings.newest_on_top == true) {
+				offsetAmt = this.settings.offset.y;
+			}
+			css[this.settings.placement.from] = offsetAmt+'px';
+
+			switch (this.settings.placement.align) {
+				case "left":
+				case "right":
+					css[this.settings.placement.align] = this.settings.offset.x+'px';
+					break;
+				case "center":
+					css.left = 0;
+					css.right = 0;
+					break;
+			}
+			this.$ele.css(css).addClass(this.settings.animate.enter);
+			$.each(Array('webkit-', 'moz-', 'o-', 'ms-', ''), function(index, prefix) {
+				self.$ele[0].style[prefix+'AnimationIterationCount'] = 1;
+			});
+
+			$(this.settings.element).append(this.$ele);
+
+			if (this.settings.newest_on_top == true) {
+				offsetAmt = (parseInt(offsetAmt)+parseInt(this.settings.spacing)) + this.$ele.outerHeight();
+				this.reposition(offsetAmt);
+			}
+
+			if ($.isFunction(self.settings.onShow)) {
+				self.settings.onShow.call(this.$ele);
+			}
+
+			this.$ele.one(this.animations.start, function(event) {
+				hasAnimation = true;
+			}).one(this.animations.end, function(event) {
+				if ($.isFunction(self.settings.onShown)) {
+					self.settings.onShown.call(this);
+				}
+			});
+
+			setTimeout(function() {
+				if (!hasAnimation) {
+					if ($.isFunction(self.settings.onShown)) {
+						self.settings.onShown.call(this);
+					}
+				}
+			}, 600);
+		},
+		bind: function() {
+			var self = this;
+
+			this.$ele.find('[data-notify="dismiss"]').on('click', function() {
+				self.close();
+			})
+
+			this.$ele.mouseover(function(e) {
+				$(this).data('data-hover', "true");
+			}).mouseout(function(e) {
+				$(this).data('data-hover', "false");
+			});
+			this.$ele.data('data-hover', "false");
+
+			if (this.settings.delay > 0) {
+				self.$ele.data('notify-delay', self.settings.delay);
+				var timer = setInterval(function() {
+					var delay = parseInt(self.$ele.data('notify-delay')) - self.settings.timer;
+					if ((self.$ele.data('data-hover') === 'false' && self.settings.mouse_over == "pause") || self.settings.mouse_over != "pause") {
+						var percent = ((self.settings.delay - delay) / self.settings.delay) * 100;
+						self.$ele.data('notify-delay', delay);
+						self.$ele.find('[data-notify="progressbar"] > div').attr('aria-valuenow', percent).css('width', percent + '%');
+					}
+					if (delay <= -(self.settings.timer)) {
+						clearInterval(timer);
+						self.close();
+					}
+				}, self.settings.timer);
+			}
+		},
+		close: function() {
+			var self = this,
+				$successors = null,
+				posX = parseInt(this.$ele.css(this.settings.placement.from)),
+				hasAnimation = false;
+
+			this.$ele.data('closing', 'true').addClass(this.settings.animate.exit);
+			self.reposition(posX);
+
+			if ($.isFunction(self.settings.onClose)) {
+				self.settings.onClose.call(this.$ele);
+			}
+
+			this.$ele.one(this.animations.start, function(event) {
+				hasAnimation = true;
+			}).one(this.animations.end, function(event) {
+				$(this).remove();
+				if ($.isFunction(self.settings.onClosed)) {
+					self.settings.onClosed.call(this);
+				}
+			});
+
+			setTimeout(function() {
+				if (!hasAnimation) {
+					self.$ele.remove();
+					if (self.settings.onClosed) {
+						self.settings.onClosed(self.$ele);
+					}
+				}
+			}, 600);
+		},
+		reposition: function(posX) {
+			var self = this,
+				notifies = '[data-notify-position="' + this.settings.placement.from + '-' + this.settings.placement.align + '"]:not([data-closing="true"])',
+				$elements = this.$ele.nextAll(notifies);
+			if (this.settings.newest_on_top == true) {
+				$elements = this.$ele.prevAll(notifies);
+			}
+			$elements.each(function() {
+				$(this).css(self.settings.placement.from, posX);
+				posX = (parseInt(posX)+parseInt(self.settings.spacing)) + $(this).outerHeight();
+			});
+		}
+	});
+
+	$.notify = function ( content, options ) {
+		var plugin = new Notify( this, content, options );
+		return plugin.notify;
+	};
+	$.notifyDefaults = function( options ) {
+		defaults = $.extend(true, {}, defaults, options);
+		return defaults;
+	};
+	$.notifyClose = function( command ) {
+		if (typeof command === "undefined" || command == "all") {
+			$('[data-notify]').find('[data-notify="dismiss"]').trigger('click');
+		}else{
+			$('[data-notify-position="'+command+'"]').find('[data-notify="dismiss"]').trigger('click');
+		}
+	};
+
+}));
+
+
+/***/ }),
+
 /***/ "./node_modules/bootstrap/dist/js/bootstrap.js":
 /*!*****************************************************!*\
   !*** ./node_modules/bootstrap/dist/js/bootstrap.js ***!
@@ -59097,36 +59868,49 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.config.delimiter = ['[[', ']]'];
 Pusher.logToConsole = true;
 var app = new Vue({
   el: '#app',
+  delimiters: ['[[', ']]'],
   data: {
     roomId: roomId,
+    userId: userId,
     content: '',
-    users: []
+    users: [],
+    messages: []
   },
-  ready: function ready() {
+  mounted: function mounted() {
     var _this = this;
 
     Echo.join("room.".concat(roomId)).listen('SendMessage', function (data) {
-      console.log(data);
+      _this.messages.push(data);
     }).here(function (users) {
       _this.users = users;
+    }).joining(function (user) {
+      _this.users.push(user);
+
+      jQuery.notify("<strong>".concat(user.name, "</strong> entrou no chat."), {
+        allow_dismiss: true
+      });
+    }).leaving(function (user) {
+      _this.users.$remove(user);
     });
   },
   methods: {
     sendMessage: function sendMessage() {
-      window.axios.post("/chat/rooms/".concat(this.roomId, "/message"), {
+      axios.post("/chat/rooms/".concat(this.roomId, "/message"), {
         'content': this.content
-      }).then(function (response) {// console.log(response);
+      }).then(function (response) {// console.log(app);
+        // $('#input-mesage').val('')
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    createPhoto: function createPhoto(email) {
+      return "http://www.gravatar.com/avatar/".concat(md5(email), ".jpg");
     }
   }
-});
-console.log(app);
+}); // console.log(this.users, roomId)
 
 /***/ }),
 
@@ -59152,6 +59936,10 @@ try {
   window.$ = window.jQuery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 
   __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
+
+  __webpack_require__(/*! bootstrap-notify */ "./node_modules/bootstrap-notify/bootstrap-notify.js");
+
+  window.md5 = __webpack_require__(/*! blueimp-md5 */ "./node_modules/blueimp-md5/js/md5.js");
 } catch (e) {}
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -59174,7 +59962,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: '03f5172211d2ecac60f7',
   cluster: 'mt1',
-  forceTLS: true
+  forceTLS: true,
+  encrypted: false
 });
 
 /***/ }),

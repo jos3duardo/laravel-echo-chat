@@ -14,7 +14,6 @@ class SendMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-
     /**
      * @var Message
      */
@@ -33,6 +32,7 @@ class SendMessage implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new PresenceChannel("room.{$this->message->romm_id}");
+        return new PresenceChannel("room.{$this->message->room_id}");
     }
 }
+

@@ -11,6 +11,9 @@ try {
     window.$ = window.jQuery = require('jquery');
 
     require('bootstrap');
+    require('bootstrap-notify');
+    window.md5 = require('blueimp-md5');
+
 } catch (e) {}
 
 /**
@@ -37,5 +40,6 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: '03f5172211d2ecac60f7',
     cluster: 'mt1',
-    forceTLS: true
+    forceTLS: true,
+    encrypted: false
 });
