@@ -67,7 +67,7 @@ npm run development -- --watch
 ## Set configs Laravel for Echo
 
 resources/js/bootstrap.js
-```json
+```bash
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: 'yor key',
