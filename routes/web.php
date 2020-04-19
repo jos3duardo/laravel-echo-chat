@@ -16,7 +16,7 @@ Auth::routes();
 
 Route::get('/', function () {
     return view('rooms.index');
-});
+})->middleware('auth');
 
 Route::group([ 'prefix' => 'chat', 'as' => 'chat.', 'middleware'=> 'auth' ], function (){
     Route::resource('rooms', 'RoomController');
