@@ -27,7 +27,7 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Pusher.logToConsole = true;
+Pusher.logToConsole = false;
 
 const app = new Vue({
     el: '#app',

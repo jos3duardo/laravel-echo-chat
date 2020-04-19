@@ -11,7 +11,6 @@
                             Nova Sala
                         </button>
                     </div>
-
                     <div class="card-body">
                         @forelse($rooms as $room)
                             <ul class="list-group">
@@ -61,7 +60,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </li>
                             </ul>
                         @empty
@@ -95,7 +93,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                        <button type="button" class="btn btn-primary">Salvar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
                     </div>
                 </form>
             </div>
