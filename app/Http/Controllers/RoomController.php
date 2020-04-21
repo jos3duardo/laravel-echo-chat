@@ -110,12 +110,14 @@ class RoomController extends Controller
      */
     public function destroy(Room $room)
     {
+        //check messages
         $messages = Message::all();
         if ($messages){
             foreach ($messages as $message){
                 $message->delete();
             }
         }
+        //check users of room
         $users = User::all();
         if ($users){
             foreach ($users as $user){
