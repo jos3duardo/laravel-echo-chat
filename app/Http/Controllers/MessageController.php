@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\SendMessage;
 use App\Models\Message;
-use App\Models\Room;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
