@@ -1,10 +1,12 @@
-# Simple chat using Laravel Echo and Pusher
+## Simple chat using Laravel Echo and Pusher
 
 
-preview list rooms  
+Preview list rooms    
+  
 ![room](public/img/room.jpg)
 
-preview chat  
+preview chat   
+
 ![chat](public/img/chat.jpg)    
 
 
@@ -68,7 +70,7 @@ start node server mode watch
 npm run development -- --watch
 ```
 
-## Set configs Laravel for Echo
+## Set configs Laravel Echo
 
 resources/js/bootstrap.js
 ```bash
