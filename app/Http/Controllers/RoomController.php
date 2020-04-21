@@ -46,7 +46,7 @@ class RoomController extends Controller
     {
         //caso usuario tente acessar uma sala q não existe
         if (!$room){
-            throw new ModelNotFoundException('Sala não existe');
+            throw new ModelNotFoundException('A Sala não existe');
         }
 
         $messages = Message::where([
@@ -79,6 +79,7 @@ class RoomController extends Controller
         $message->user_id = Auth::user()->id;
         $message->save();
 
+        //send event message chat
         broadcast(new SendMessage($message));
 
         return response()->json($message, 201);
