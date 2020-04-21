@@ -45,7 +45,7 @@ class RoomController extends Controller
      */
     public function show(Room $room)
     {
-        //caso usuario tente acessar uma sala q não existe
+        //if usual try to access a room q does not exist
         if (!$room){
             throw new ModelNotFoundException('A Sala não existe');
         }
