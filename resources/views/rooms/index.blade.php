@@ -6,9 +6,9 @@
             <div class="col-md-8 offset-md-2">
                 <div class="card">
                     <div class="card-header">
-                        Escolha uma das salas abaixo
+                        Escolha uma das salas
                         <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#novaSalaChat">
-                            Nova Sala
+                            Criar Sala
                         </button>
                     </div>
                     <div class="card-body">
